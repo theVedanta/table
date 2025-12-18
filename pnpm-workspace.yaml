@@ -12,3 +12,4 @@ packages:
   - 'examples/svelte/*'
   - 'examples/vanilla/*'
   - 'examples/vue/*'
+  - 'examples/preact/*'
