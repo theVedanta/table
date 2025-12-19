@@ -6,8 +6,13 @@ import {
   RowData,
   createTable,
 } from '@tanstack/table-core'
-import { ComponentType, ComponentChildren } from 'preact'
-import { useState } from 'preact/hooks'
+import {
+  Component,
+  ComponentChildren,
+  ComponentType,
+  isValidElement,
+} from 'preact'
+import { useRef, useState } from 'preact/hooks'
 
 export type Renderable<TProps> = ComponentChildren | ComponentType<TProps>
 
@@ -28,29 +33,7 @@ export function flexRender<TProps extends object>(
 function isPreactComponent<TProps>(
   component: unknown,
 ): component is ComponentType<TProps> {
-  return (
-    isClassComponent(component) ||
-    typeof component === 'function' ||
-    isExoticComponent(component)
-  )
-}
-
-function isClassComponent(component: any) {
-  return (
-    typeof component === 'function' &&
-    (() => {
-      const proto = Object.getPrototypeOf(component)
-      return proto.prototype && proto.prototype.isPreactComponent
-    })()
-  )
-}
-
-function isExoticComponent(component: any) {
-  return (
-    typeof component === 'object' &&
-    typeof component.$$typeof === 'symbol' &&
-    ['react.memo', 'react.forward_ref'].includes(component.$$typeof.description)
-  )
+  return isValidElement(component) || component instanceof Component
 }
 
 export function usePreactTable<TData extends RowData>(
@@ -68,6 +51,8 @@ export function usePreactTable<TData extends RowData>(
   const [tableRef] = useState(() => ({
     current: createTable<TData>(resolvedOptions),
   }))
+
+  console.log('tableRef', tableRef)
 
   // By default, manage table state here using the table's initial state
   const [state, setState] = useState(() => tableRef.current.initialState)

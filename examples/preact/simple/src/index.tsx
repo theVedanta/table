@@ -1,11 +1,10 @@
-import { render } from 'preact'
-
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   usePreactTable,
 } from '@tanstack/preact-table'
+import { render } from 'preact'
 import { useReducer, useState } from 'preact/hooks'
 
 type Person = {
@@ -76,7 +75,7 @@ const columns = [
   }),
 ]
 
-export function App() {
+function App() {
   const [data, _setData] = useState(() => [...defaultData])
   const rerender = useReducer(() => ({}), {})[1]
 
@@ -134,11 +133,14 @@ export function App() {
         </tfoot>
       </table>
       <div className="h-4" />
-      <button onClick={() => rerender(1)} className="border p-2">
+      {/*<button onClick={() => rerender()} className="border p-2">
         Rerender
-      </button>
+      </button>*/}
     </div>
   )
 }
 
-render(<App />, document.getElementById('app'))
+const rootElement = document.getElementById('app')
+if (!rootElement) throw new Error('Failed to find the root element')
+
+render(<App />, rootElement)
